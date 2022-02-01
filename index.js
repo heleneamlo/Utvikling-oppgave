@@ -4,3 +4,5 @@ const tTetromino = "thirdShape"
 const oTetromino = "fourthShape"
 const iTetromino = "fifthShape"
 let tetrominoes = [lTetromino,zTetromino,tTetromino,oTetromino,iTetromino]
+
+const grid = $("")
