@@ -1,3 +1,5 @@
+const GRID = $(".grid")
+console.log(GRID);
 const lTetromino =[
     [1, width+1, width2+1, 2],
     [width, width+1, wdth+2, wdth2+2],
