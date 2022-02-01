@@ -89,7 +89,11 @@ function moveDown() {
 timerId = setInterval(moveDown,500)
 
 
-
+function freeze() {
+  if(currentTetr.some(e => squares[currentPos + e + width].classList.contains("taken"))){
+    currentTetr.forEach(e => squares[currentPos + e].classList.add("taken"))
+  }
+}
 
 
 })
