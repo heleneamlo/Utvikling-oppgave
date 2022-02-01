@@ -1,1 +1,3 @@
-console.log("lmao");
+document.addEventListener(`DOMContentLoaded`, ()=>{
+
+})
