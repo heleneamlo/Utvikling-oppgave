@@ -62,7 +62,8 @@ const STETRIMINO = [
   let currentTetr = TETRIMINOES[Math.floor(Math.random()*TETRIMINOES.length)][currentRot];
   
 
-
+//randomly select a Tetromino and its first rotation
+let random = Math.floor(Math.random()*TETRIMINOES.length)
   //tegn tetriminioes
   function draw() {
     currentTetr.forEach(e => {
@@ -88,7 +89,7 @@ function moveDown() {
 }
 
 //spill cycle
-timerId = setInterval(moveDown,500)
+timerId = setInterval(moveDown,700)
 
 
 //knapper -> funksjoner
@@ -96,14 +97,14 @@ function control(e) {
   if(e.keyCode === 37) {
     moveLeft()
   } else if (e.keyCode === 38) {
-  //  rotate()
+  rotate()
   } else if (e.keyCode === 39) {
-   // moveRight()
+    moveRight()
   } else if (e.keyCode === 40) {
     moveDown()
   }
 }
-document.addEventListener("keyup",control)
+document.addEventListener("keydown",control)
 
 function freeze() {
   //sjekker om den toucher noe med taken, enten bunnen eller andre blokker
@@ -129,4 +130,27 @@ function moveLeft() {
     }
     draw()
   };
+  function moveRight() {
+    undraw()
+    const isAtRightEdge = currentTetr.some(e => (currentPos + e)% width === width-1)
+  
+  
+      if (!isAtRightEdge) currentPos +=1 
+        
+      if (currentTetr.some(e => squares[currentPos + e].classList.contains("taken"))) {
+        currentPos -=1
+      }
+      draw()
+    };
 // });
+
+//roter
+function rotate() {
+  undraw();
+  currentRot++
+  if (currentRot === currentTetr.length) { // gå til 0 etter 4 
+    currentRot = 0
+  }
+  currentTetr = TETRIMINOES[random][currentRot]
+  draw()
+};
