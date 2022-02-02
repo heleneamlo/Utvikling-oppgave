@@ -1,4 +1,13 @@
 
+
+.container {
+    display:flex;
+}
+.tetromino {
+  background-color: #0000ff;
+  border: 1px;
+  border-color: white;
+}
 .mini-grid {
     margin-left: 50px;
     width: 80px;
@@ -20,9 +29,6 @@
     background-color: yellow;
 }
 
-.tetromino {
-    background-color: blue;
-}
 
 .grid div{
     height: 20px;

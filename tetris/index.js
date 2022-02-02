@@ -2,8 +2,10 @@
 const GRID = $(".grid");
 let squares = Array.from($(".grid div"));
 const SCOREDISPLAY = $("#score");
-const STARTBTN = $("#start-button");
+const STARTBTN = document.querySelector("#start-button");
 const width = 10;
+let nextRandom = 0;
+let timerId;
 
 const JTETRIMINO =[
   [1, width+1, width*2+1, 2],
@@ -37,7 +39,7 @@ const STETRIMINO = [
     [1,width+1,width*2+1,width*3+1],
     [width,width+1,width+2,width+3],
     [1,width+1,width*2+1,width*3+1]
-    
+
   ];
 
   const ZTETRIMINO = [
@@ -53,14 +55,14 @@ const STETRIMINO = [
     [width*3, width*2, width*2+1, width*2+2]
   ];
 
-  
+
 
   const TETRIMINOES = [JTETRIMINO, STETRIMINO, TTETRIMINO, OTETRIMINO, ITETRIMINO,ZTETRIMINO,LTETRIMINO];
 
   let currentPos = 4;
   let currentRot = 0
-  let currentTetr = TETRIMINOES[Math.floor(Math.random()*TETRIMINOES.length)][currentRot];
-  
+
+
 
 //randomly select a Tetromino and its first rotation
 let random = Math.floor(Math.random()*TETRIMINOES.length)
@@ -71,6 +73,8 @@ let random = Math.floor(Math.random()*TETRIMINOES.length)
     });
   };
 
+  let currentTetr = TETRIMINOES[random][currentRot];
+
   //fjern tetriminioes
   function undraw() {
     currentTetr.forEach(e => {
@@ -78,7 +82,7 @@ let random = Math.floor(Math.random()*TETRIMINOES.length)
     });
   };
 
- 
+
 
 //fjern, flytt ned en rad og tegn igjen
 function moveDown() {
@@ -89,7 +93,7 @@ function moveDown() {
 }
 
 //spill cycle
-timerId = setInterval(moveDown,700)
+// timerId = setInterval(moveDown,700)
 
 
 //knapper -> funksjoner
@@ -111,10 +115,12 @@ function freeze() {
   if(currentTetr.some(e => squares[currentPos + e + width].classList.contains("taken"))){
     currentTetr.forEach(e => squares[currentPos + e].classList.add("taken"))
     //neste begynner å falle
-    random = Math.floor(Math.random()*TETRIMINOES.length)
+    random = nextRandom
+    nextRandom = Math.floor(Math.random()*TETRIMINOES.length)
     currentTetr = TETRIMINOES[random][currentRot]
     currentPos = 4;
     draw();
+    displayShape();
   }
 }
 
@@ -123,8 +129,8 @@ function moveLeft() {
   const isAtLeftEdge = currentTetr.some(e => (currentPos + e)% width === 0)
 
 
-    if (!isAtLeftEdge) currentPos -=1 
-      
+    if (!isAtLeftEdge) currentPos -=1
+
     if (currentTetr.some(e => squares[currentPos + e].classList.contains("taken"))) {
       currentPos +=1
     }
@@ -133,10 +139,10 @@ function moveLeft() {
   function moveRight() {
     undraw()
     const isAtRightEdge = currentTetr.some(e => (currentPos + e)% width === width-1)
-  
-  
-      if (!isAtRightEdge) currentPos +=1 
-        
+
+
+      if (!isAtRightEdge) currentPos +=1
+
       if (currentTetr.some(e => squares[currentPos + e].classList.contains("taken"))) {
         currentPos -=1
       }
@@ -148,9 +154,57 @@ function moveLeft() {
 function rotate() {
   undraw();
   currentRot++
-  if (currentRot === currentTetr.length) { // gå til 0 etter 4 
+  if (currentRot === currentTetr.length) { // gå til 0 etter 4
     currentRot = 0
   }
   currentTetr = TETRIMINOES[random][currentRot]
   draw()
 };
+
+// displaying av hva som kommer neste
+const displaySquares= document.querySelectorAll(".mini-grid div")
+const displayWidth = 4;
+let displayIndex = 0;
+
+
+const UPNEXTTETRIMINOES = [
+  [1, displayWidth+1, displayWidth*2+1, 2], // J
+  [0,displayWidth,displayWidth+1,displayWidth*2+1], // S
+  [1,displayWidth,displayWidth+1,displayWidth+2], // T
+  [0,1,displayWidth,displayWidth+1], // O
+  [0,1,2,3], // I
+  [1,displayWidth,displayWidth+1,displayWidth*2+0], // Z
+  [0, displayWidth+1, displayWidth*2+1, 1] // L
+]
+
+// function displayShape() {
+//   //fjerning av forrigje
+//   displaySquares.forEach(square => {
+//     square.classList.remove('tetromino')
+//   })
+//    UPNEXTTETRIMINOES[nextRandom].forEach( e => {
+//       displaySquares[displayIndex + e].classList.add('tetromino')
+//   })
+// }
+function displayShape() {
+  //remove any trace of a tetromino form the entire grid
+  displaySquares.forEach(square => {
+    square.classList.remove('tetromino')
+  })
+  UPNEXTTETRIMINOES[nextRandom].forEach( index => {
+    displaySquares[displayIndex + index].classList.add('tetromino')
+  })
+}
+
+//Få startknapp til å funke
+STARTBTN.addEventListener("click", ()=> {
+  if (timerId) {
+    clearInterval(timerId)
+    timerId = null
+  } else {
+    draw()
+    timerId = setInterval(moveDown,700)
+    nextRandom = Math.floor(Math.random()*TETRIMINOES.length)
+    displayShape
+  }
+})
