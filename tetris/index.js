@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+// document.addEventListener('DOMContentLoaded', () => {
 const GRID = $(".grid");
 let squares = Array.from($(".grid div"));
 const SCOREDISPLAY = $("#score");
@@ -79,21 +79,54 @@ const STETRIMINO = [
 
  
 
-
+//fjern, flytt ned en rad og tegn igjen
 function moveDown() {
-  undraw()
+  undraw();
   currentPos += width
   draw();
+  freeze();
 }
 
+//spill cycle
 timerId = setInterval(moveDown,500)
 
 
+//knapper -> funksjoner
+function control(e) {
+  if(e.keyCode === 37) {
+    moveLeft()
+  } else if (e.keyCode === 38) {
+  //  rotate()
+  } else if (e.keyCode === 39) {
+   // moveRight()
+  } else if (e.keyCode === 40) {
+    moveDown()
+  }
+}
+document.addEventListener("keyup",control)
+
 function freeze() {
+  //sjekker om den toucher noe med taken, enten bunnen eller andre blokker
   if(currentTetr.some(e => squares[currentPos + e + width].classList.contains("taken"))){
     currentTetr.forEach(e => squares[currentPos + e].classList.add("taken"))
+    //neste begynner å falle
+    random = Math.floor(Math.random()*TETRIMINOES.length)
+    currentTetr = TETRIMINOES[random][currentRot]
+    currentPos = 4;
+    draw();
   }
 }
 
+function moveLeft() {
+  undraw()
+  const isAtLeftEdge = currentTetr.some(e => (currentPos + e)% width === 0)
 
-})
+
+    if (!isAtLeftEdge) currentPos -=1 
+      
+    if (currentTetr.some(e => squares[currentPos + e].classList.contains("taken"))) {
+      currentPos +=1
+    }
+    draw()
+  };
+// });
