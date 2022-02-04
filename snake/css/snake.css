@@ -9,7 +9,7 @@ body{
 }
 
 #game-board{
-    background-color: #ccc;
+    background-color: #a4a4a4;
     width:100vmin;
     height: 100vmin;
     display:grid;
@@ -18,11 +18,11 @@ body{
 }
 
 .snake{
-    background-color: hsl(0, 100%, 50%);
-    border: .25vmin solid black;
+    background-color: #4b4b4b
+    /* border: .25vmin solid black; */
 }
 
 .food{
-    background-color: hsl(50, 100%, 50%);
-    border: .25vmin solid black;
+    background-color: #8080ff
+    /* border: .25vmin solid black; */
 }
