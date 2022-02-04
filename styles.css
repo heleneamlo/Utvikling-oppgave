@@ -3,6 +3,9 @@
     src: url(zeldafont.woff);
   }
 
+  body {
+    background-color: #44355b;;
+  }
 
 img {
     display: block;
