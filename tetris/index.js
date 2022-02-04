@@ -7,8 +7,11 @@ const width = 10;
 let nextRandom = 0;
 let timerId;
 let score = 0;
+
+let gameover = true;
+
 const colors = [
-  "blue", "green", "pink", "yellow", "lightblue", "red", "orange"
+  "#577590", "#90be6d", "#43aa8b", "#f9c74f", "#f8961e", "#f94144", "#f3722c"
 ]
 
 const JTETRIMINO =[
@@ -104,14 +107,18 @@ function moveDown() {
 
 //knapper -> funksjoner
 function control(e) {
+  if (gameover) {
+    alert("Please start a new game")
+  } else {
   if(e.keyCode === 37) {
-    moveLeft()
-  } else if (e.keyCode === 38) {
-  rotate()
-  } else if (e.keyCode === 39) {
-    moveRight()
-  } else if (e.keyCode === 40) {
-    moveDown()
+      moveLeft()
+    } else if (e.keyCode === 38) {
+    rotate()
+    } else if (e.keyCode === 39) {
+      moveRight()
+    } else if (e.keyCode === 40) {
+      moveDown()
+    }
   }
 }
 document.addEventListener("keydown",control)
@@ -207,16 +214,13 @@ function displayShape() {
 }
 
 //Få startknapp til å funke
-STARTBTN.addEventListener("click", ()=> {
-  if (timerId) {
-    clearInterval(timerId)
-    timerId = null
-  } else {
-    draw()
+STARTBTN.addEventListener("click", () => {
+    draw();
     timerId = setInterval(moveDown,700)
     nextRandom = Math.floor(Math.random()*TETRIMINOES.length)
-    displayShape
-  }
+    displayShape();
+    gameover = false;
+    STARTBTN.style.display = "none"
 })
 
 function addScore() {
@@ -240,7 +244,9 @@ function addScore() {
 
  //game over
  function gameOver() {
-   if(currentTetr.some(e => squares[currentPos + e].classList.contains("taken")))
-   SCOREDISPLAY.innerHTML = "end"
+   if(currentTetr.some(e => squares[currentPos + e].classList.contains("taken"))) {
+   SCOREDISPLAY.innerHTML = "END"
    clearInterval(timerId)
+   gameover = true;
+   }
  }
