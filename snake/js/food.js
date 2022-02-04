@@ -1,31 +1,28 @@
-import {onSnake, utvidSnake} from './snake.js';
-function randomFood(){
-    let x = Math.ceil(Math.random() * 21);
-    let y  = Math.ceil(Math.random() * 21);
-    return [x, y];
-}
-let foodPos = randomFood()
-let food = {x: foodPos[0], y: foodPos[1]};
-const utvidelsesHastighet = 1;
+import { onSnake, expandSnake } from './snake.js'
+import { randomGridPosition } from './grid.js'
 
-export function update(){
-    if(onSnake(food)){
-        utvidSnake(utvidelsesHastighet);
-        let foodPos = randomFood()
-        if(onSnake(foodPos)){}else{
-            food = {x: foodPos[0], y: foodPos[1]};
-        }
+let food = getRandomFoodPosition()
+const EXPANSION_RATE = 1;
 
-    }
+export function update() {
+  if (onSnake(food)) {
+    expandSnake(EXPANSION_RATE)
+    food = getRandomFoodPosition()
+  }
 }
 
-export function render(gameBoard){
-        const foodElement = document.createElement('div');
-        foodElement.style.gridRowStart = food.y;
-        foodElement.style.gridColumnStart = food.x;
-        foodElement.classList.add('food');
-        gameBoard.appendChild(foodElement);
+export function draw(gameBoard) {
+  const foodElement = document.createElement('div')
+  foodElement.style.gridRowStart = food.y
+  foodElement.style.gridColumnStart = food.x
+  foodElement.classList.add('food')
+  gameBoard.appendChild(foodElement)
 }
 
-
-
+function getRandomFoodPosition() {
+  let newFoodPosition
+  while (newFoodPosition == null || onSnake(newFoodPosition)) {
+    newFoodPosition = randomGridPosition()
+  }
+  return newFoodPosition
+}
