@@ -1,11 +1,15 @@
 // document.addEventListener('DOMContentLoaded', () => {
-const GRID = $(".grid");
+const GRID = document.querySelector(".grid");
 let squares = Array.from($(".grid div"));
-const SCOREDISPLAY = $("#score");
+const SCOREDISPLAY = document.querySelector("#score");
 const STARTBTN = document.querySelector("#start-button");
 const width = 10;
 let nextRandom = 0;
 let timerId;
+let score = 0;
+const colors = [
+  "blue", "green", "pink", "yellow", "lightblue", "red", "orange"
+]
 
 const JTETRIMINO =[
   [1, width+1, width*2+1, 2],
@@ -70,6 +74,7 @@ let random = Math.floor(Math.random()*TETRIMINOES.length)
   function draw() {
     currentTetr.forEach(e => {
       squares[ currentPos + e ].classList.add("tetromino");
+      squares[ currentPos + e ].style.backgroundColor= colors[random]
     });
   };
 
@@ -79,6 +84,7 @@ let random = Math.floor(Math.random()*TETRIMINOES.length)
   function undraw() {
     currentTetr.forEach(e => {
       squares[ currentPos + e ].classList.remove("tetromino");
+      squares[ currentPos + e ].style.backgroundColor= ""
     });
   };
 
@@ -121,6 +127,8 @@ function freeze() {
     currentPos = 4;
     draw();
     displayShape();
+    addScore();
+    gameOver()
   }
 }
 
@@ -164,7 +172,7 @@ function rotate() {
 // displaying av hva som kommer neste
 const displaySquares= document.querySelectorAll(".mini-grid div")
 const displayWidth = 4;
-let displayIndex = 0;
+const displayIndex = 0;
 
 
 const UPNEXTTETRIMINOES = [
@@ -190,9 +198,11 @@ function displayShape() {
   //remove any trace of a tetromino form the entire grid
   displaySquares.forEach(square => {
     square.classList.remove('tetromino')
+    square.style.backgroundColor = ""
   })
   UPNEXTTETRIMINOES[nextRandom].forEach( index => {
     displaySquares[displayIndex + index].classList.add('tetromino')
+    displaySquares[displayIndex + index].style.backgroundColor = colors[nextRandom]
   })
 }
 
@@ -208,3 +218,29 @@ STARTBTN.addEventListener("click", ()=> {
     displayShape
   }
 })
+
+function addScore() {
+  for (let i = 0; i < 199; i+=width ){
+    const ROW = [i,i+1,i+2,i+3,i+4,i+5,i+6,i+7,i+8,i+9]
+
+    if (ROW.every(e => squares[e].classList.contains("taken"))) {
+      score +=10
+      SCOREDISPLAY.innerHTML = score
+      ROW.forEach(e => {
+        squares[e].classList.remove("taken")
+        squares[e].classList.remove("tetromino")
+        squares[e].style.backgroundColor = ""
+      })
+      const REMOVEDSQUARES = squares.splice(i,width)
+      squares = REMOVEDSQUARES.concat(squares)
+      squares.forEach(cell => GRID.appendChild(cell))
+    }
+  }
+ }
+
+ //game over
+ function gameOver() {
+   if(currentTetr.some(e => squares[currentPos + e].classList.contains("taken")))
+   SCOREDISPLAY.innerHTML = "end"
+   clearInterval(timerId)
+ }
