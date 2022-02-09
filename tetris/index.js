@@ -101,8 +101,7 @@ function moveDown() {
   freeze();
 }
 
-//spill cycle
-// timerId = setInterval(moveDown,700)
+
 
 
 //knapper -> funksjoner
