@@ -101,14 +101,14 @@ function moveDown() {
   freeze();
 }
 
-//spill cycle
-// timerId = setInterval(moveDown,700)
+
 
 
 //knapper -> funksjoner
 function control(e) {
   if (gameover) {
-    alert("Please start a new game")
+    alert(`Your score was ${score}
+    Please start a new game`)
   } else {
   if(e.keyCode === 37) {
       moveLeft()
